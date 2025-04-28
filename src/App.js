@@ -9,7 +9,7 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import { PrimeReactProvider} from 'primereact/api';
-import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Topbar from './Assets/Components/Topbar/Topbar';
 import Dashboard from './Assets/Components/Dashboard/Dashboard';
 import Fiscalizacion from "./Assets/Components/Fiscalizacion/Fiscalizacion.js";
@@ -143,19 +143,17 @@ const ProductosPage = () => {
       console.error("Error al obtener productos:", error);
     }
   };
-
-  // Agregar un nuevo producto
-  const addProduct = async (product) => {
-    try {
-      const res = await axios.post('http://localhost:1900/api/products', product);
-      console.log('Producto agregado:', res.data); // Aquí para verificar la respuesta
-      setProducts(prevProducts => [...prevProducts, res.data]); // Actualizar estado con el nuevo producto
-    } catch (error) {
-      console.error("Error al agregar producto:", error);
-    }
-  };
-
-  // Cargar los productos al cargar la página
+// Agregar un nuevo producto
+const addProduct = async (product) => {
+  try {
+    const res = await axios.post('http://localhost:1900/api/products', product);
+    console.log('Producto agregado:', res.data); // Aquí para verificar la respuesta
+    setProducts(prevProducts => [...prevProducts, res.data]); // Actualizar estado con el nuevo producto
+  } catch (error) {
+    console.error("Error al agregar producto:", error);
+  }
+};
+ // Cargar los productos al cargar la página
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -174,32 +172,31 @@ const ProductosPage = () => {
 // ----------------------
 
 function App() {
+  
   const { isAuthenticated } = useAuth0();
 
   return (
-    <Router>
-      <PrimeReactProvider>
-        <div className="App">
-          {isAuthenticated ? (
-            <>
-              <Topbar />
-              <Mensaje />
-              <Routes>
-                <Route path="/Dashboard" element={<Dashboard />} />
-                <Route path="/Fiscalizacion" element={<Fiscalizacion />} />
-                <Route path="/RecursosHumanos" element={<RecursosHumanos />} />
-                <Route path="/Extra" element={<Ext />} />
-                <Route path="/Configuracion" element={<Configuracion />} />
-                <Route path="/Productos" element={<ProductosPage />} />
-              </Routes>
-              <Profile />
+    <PrimeReactProvider>
+      <div className="App">
+        {isAuthenticated ? (
+          <>
+            <Topbar />
+            <Mensaje />
+            <Routes>
+              <Route path="/Dashboard" element={<Dashboard />} />
+              <Route path="/Fiscalizacion" element={<Fiscalizacion />} />
+              <Route path="/RecursosHumanos" element={<RecursosHumanos />} />
+              <Route path="/Extra" element={<Ext />} />
+              <Route path="/Configuracion" element={<Configuracion />} />
+              <Route path="/Productos" element={<ProductosPage />} />
+            </Routes>
+            <Profile />
             </>
-          ) : (
-            <LoginButton />
-          )}
-        </div>
-      </PrimeReactProvider>
-    </Router>
+        ) : (
+          <LoginButton />
+        )}
+      </div>
+    </PrimeReactProvider>
   );
 }
 
