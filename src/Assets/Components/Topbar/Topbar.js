@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Toolbar } from 'primereact/toolbar';
 import { Avatar } from 'primereact/avatar';
-import Sidebar1 from '../Sidebar/Sidebar1';
+import Sidebar1 from '../Sidebar/Sidebar1'; // Asegúrate que Sidebar1 está correcto
 
 export default function Topbar() {
-    const { user } = useAuth0(); 
+    const { user } = useAuth0();
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -13,64 +13,44 @@ export default function Topbar() {
     };
 
     const startContent = (
-        <React.Fragment>
-        </React.Fragment>
-    );
-
-    const centerContent = (
-        <div className="flex flex-wrap align-items-center gap-3">
-            <button className="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
-                <i className="pi pi-home text-2xl"></i>
-            </button>
-            <button className="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
-                <i className="pi pi-user text-2xl"></i>
-            </button>
-            <button className="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
-                <i className="pi pi-search text-2xl"></i>
-            </button>
-            <button className="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
-                <Sidebar1 />
-            </button>
+        <div className="flex align-items-center gap-3">
+            <Sidebar1 />
+            <span className="text-xl font-bold text-white ml-3">Mi Aplicación</span>
         </div>
     );
 
+    const centerContent = (
+        <div></div> // Vacío para mantenerlo limpio
+    );
+
     const endContent = (
-        <React.Fragment>
-            {user ? (
-                <div className="flex align-items-center gap-2">
-                    <img 
-                        src={user.picture} 
-                        alt={user.name} 
-                        onClick={toggleDropdown} 
-                        className="border-circle cursor-pointer" 
-                        style={{ width: '40px', height: '40px' }}
+        <div className="flex align-items-center gap-3">
+            {user && (
+                <div className="flex align-items-center gap-2 cursor-pointer" onClick={toggleDropdown}>
+                    <Avatar 
+                        image={user.picture} 
+                        shape="circle" 
+                        size="large" 
+                        className="border-2 border-white" 
                     />
-                    {dropdownOpen && (
-                        <div className="dropdown-menu">
-                            <span className="font-bold text-bluegray-50">{user.name}</span>
-                        </div>
-                    )}
+                    <span className="text-white font-medium hidden md:inline">{user.name}</span>
                 </div>
-            ) : (
-                <Avatar 
-                    image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" 
-                    shape="circle" 
-                />
             )}
-        </React.Fragment>
+            {dropdownOpen && (
+                <div className="dropdown-content p-2 bg-white shadow-2 border-round">
+                    <p className="m-0 text-black font-medium">{user.name}</p>
+                </div>
+            )}
+        </div>
     );
 
     return (
-        <div className="card">
+        <div className="surface-900" style={{ height: '70px', display: 'flex', alignItems: 'center', padding: '0 2rem' }}>
             <Toolbar 
-                start={startContent} 
-                center={centerContent} 
-                end={endContent} 
-                className="bg-gray-900 shadow-2" 
-                style={{ 
-                    borderRadius: '3rem', 
-                    backgroundImage: 'linear-gradient(to right, var(--bluegray-500), var(--bluegray-800))' 
-                }} 
+                start={startContent}
+                center={centerContent}
+                end={endContent}
+                className="w-full border-none surface-900"
             />
         </div>
     );

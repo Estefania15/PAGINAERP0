@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import FormularioProducto from './FormularioProducto';
 import TablaProductos from './TablaProductos';
@@ -21,15 +22,34 @@ const initialData = [
 
 const RH = () => {
   const [products, setProducts] = useState([]);
-  const [chartData, setChartData] = useState(initialData);
+  const [chartData] = useState(initialData); // para que no salga la advertencia 
+//const [chartData, setChartData] = useState(initialData);  //Para modificar el grafico 
 
-  const handleAddProduct = (newProduct) => {
-    setProducts([...products, newProduct]);
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get('http://localhost:1900/api/products');
+      setProducts(res.data);
+    } catch (error) {
+      console.error("Error al obtener productos:", error);
+    }
   };
+
+  const handleAddProduct = async (newProduct) => {
+    try {
+      const res = await axios.post('http://localhost:1900/api/products', newProduct);
+      setProducts(prevProducts => [...prevProducts, res.data]);
+    } catch (error) {
+      console.error("Error al agregar producto:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
     <div className="RH">
-      <h1>Dashboard ERP</h1>
+      <h1>BASE DE DATOS ERP</h1>
       
       <FormularioProducto onAddProduct={handleAddProduct} />
       
